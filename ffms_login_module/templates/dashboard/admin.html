@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - FFMS</title>
+</head>
+<body>
+    <h1>Admin Dashboard - SECURE TEST</h1>
+    
+    <!-- CHANGED: Fixed logout button -->
+    <button onclick="handleLogout()" style="background: red; color: white; padding: 10px; border: none;">
+        LOGOUT (Secure)
+    </button>
+    
+    <p>User: <span id="userInfo">{{ user.username }}</span></p>
+    <p>If you see this without logging in, SECURITY IS BROKEN!</p>
+
+    <script>
+    // Utility function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Secure logout function
+    async function handleLogout() {
+        try {
+            console.log("Admin logging out securely...");
+            
+            // 1. Call Django logout API
+            const response = await fetch('/api/auth/logout/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                credentials: 'include'
+            });
+            
+            // 2. Clear frontend storage (your existing security)
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // 3. Redirect to login
+            window.location.href = '/login/';
+            
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Still redirect even if API fails
+            window.location.href = '/login/';
+        }
+    }
+
+    // Auto-logout if user is anonymous (for testing)
+    if ("{{ user.username }}" === "AnonymousUser") {
+        alert("SECURITY ISSUE: Anonymous user can access dashboard!");
+        handleLogout();
+    }
+    </script>
+</body>
+</html>

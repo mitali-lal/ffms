@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FFMS - Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .register-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 500px;
+        }
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .register-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .register-header p {
+            color: #666;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #764ba2;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        .error-message {
+            color: #e74c3c;
+            background: #ffeaea;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #e74c3c;
+        }
+        .success-message {
+            color: #27ae60;
+            background: #eaffea;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 4px solid #27ae60;
+        }
+        .field-error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        .password-requirements {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-header">
+            <h1>Create FFMS Account</h1>
+            <p>Five Fold Management System - Banasthali Vidyapith</p>
+        </div>
+        
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        
+        <form id="registerForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" id="firstName" name="first_name" required>
+                    <div class="field-error" id="firstNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" id="lastName" name="last_name" required>
+                    <div class="field-error" id="lastNameError"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Banasthali Email *</label>
+                <input type="email" id="email" name="email" placeholder="yourname@banasthali.in" required>
+                <div class="field-error" id="emailError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="role">Role *</label>
+                <select id="role" name="role" required>
+                    <option value="">Select Role</option>
+                    <option value="student">Student</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <div class="field-error" id="roleError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="department">Department</label>
+                <input type="text" id="department" name="department" placeholder="Computer Science">
+                <div class="field-error" id="departmentError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="tel" id="phoneNumber" name="phone_number" placeholder="+91 XXXXXXXXXX">
+                <div class="field-error" id="phoneNumberError"></div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" name="password" required>
+                    <div class="password-requirements">
+                        Must be at least 8 characters with letters and numbers
+                    </div>
+                    <div class="field-error" id="passwordError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="passwordConfirm">Confirm Password *</label>
+                    <input type="password" id="passwordConfirm" name="password_confirm" required>
+                    <div class="field-error" id="passwordConfirmError"></div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">Create Account</button>
+        </form>
+        
+        <div class="login-link">
+            <p>Already have an account? <a href="/">Login here</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearAllErrors();
+            
+            const formData = {
+                first_name: document.getElementById('firstName').value,
+                last_name: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                role: document.getElementById('role').value,
+                department: document.getElementById('department').value,
+                phone_number: document.getElementById('phoneNumber').value,
+                password: document.getElementById('password').value,
+                password_confirm: document.getElementById('passwordConfirm').value
+            };
+            
+            try {
+                const response = await fetch('/api/auth/register/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify(formData),
+                    credentials: 'include'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('success', data.message || 'Registration successful! Please check your email for verification.');
+                    document.getElementById('registerForm').reset();
+                } else {
+                    // Handle field-specific errors
+                    if (data.email) {
+                        showFieldError('email', data.email);
+                    }
+                    if (data.password) {
+                        showFieldError('password', data.password);
+                    }
+                    if (data.password_confirm) {
+                        showFieldError('passwordConfirm', data.password_confirm);
+                    }
+                    if (data.first_name) {
+                        showFieldError('firstName', data.first_name);
+                    }
+                    if (data.last_name) {
+                        showFieldError('lastName', data.last_name);
+                    }
+                    if (data.role) {
+                        showFieldError('role', data.role);
+                    }
+                    if (data.non_field_errors) {
+                        showMessage('error', data.non_field_errors);
+                    }
+                    if (data.error) {
+                        showMessage('error', data.error);
+                    }
+                }
+            } catch (error) {
+                showMessage('error', 'Network error. Please check your connection and try again.');
+            }
+        });
+        
+        function showMessage(type, message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            if (type === 'error') {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+            } else {
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+            }
+        }
+        
+        function showFieldError(fieldName, errorMessage) {
+            const errorElement = document.getElementById(fieldName + 'Error');
+            if (errorElement) {
+                errorElement.textContent = Array.isArray(errorMessage) ? errorMessage[0] : errorMessage;
+                errorElement.style.display = 'block';
+            }
+        }
+        
+        function clearAllErrors() {
+            // Clear general messages
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            // Clear field errors
+            const fieldErrors = document.querySelectorAll('.field-error');
+            fieldErrors.forEach(error => {
+                error.style.display = 'none';
+                error.textContent = '';
+            });
+        }
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Real-time email validation
+        document.getElementById('email').addEventListener('blur', function() {
+            const email = this.value;
+            if (email && !email.endsWith('@banasthali.in')) {
+                showFieldError('email', 'Only Banasthali email addresses (@banasthali.in) are allowed.');
+            }
+        });
+        
+        // Real-time password confirmation
+        document.getElementById('passwordConfirm').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const passwordConfirm = this.value;
+            
+            if (passwordConfirm && password !== passwordConfirm) {
+                showFieldError('passwordConfirm', 'Passwords do not match.');
+            } else {
+                document.getElementById('passwordConfirmError').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

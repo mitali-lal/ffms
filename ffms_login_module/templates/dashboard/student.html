@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - FFMS</title>
+</head>
+<body>
+    <h1>Student Dashboard</h1>
+    <p>Welcome, {{ user.first_name }} {{ user.last_name }}</p>
+    <p>Role: {{ user.role }}</p>
+    
+    <!-- CHANGED: Fixed logout link -->
+    <a href="javascript:void(0)" onclick="handleLogout()">Logout</a>
+
+    <!-- ADD THIS SCRIPT -->
+    <script>
+    // Utility function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Logout function
+    async function handleLogout() {
+        try {
+            console.log("Logging out...");
+            
+            const response = await fetch('/api/auth/logout/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                credentials: 'include'
+            });
+            
+            console.log("Logout response status:", response.status);
+            
+            // REDIRECT TO LOGIN PAGE regardless of API response
+            window.location.href = '/login/';
+            
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Still redirect to login page even if network fails
+            window.location.href = '/login/';
+        }
+    }
+    </script>
+</body>
+</html>
